@@ -1,0 +1,25 @@
+package net.restfulapi.app.constant;
+
+import java.util.Properties;
+
+public class TestEnum {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		/*
+		 * Properties properties = new Properties();
+		 * 
+		 * properties.put("Hello", "Heelo"); properties.setProperty("OyeHello",
+		 * "HelloS");
+		 * 
+		 * System.out.println(Workbasket.get("Claims_Form_Individual"));
+		 * 
+		 * System.out.println(properties.get("Hello"));
+		 * System.out.println(properties.get("OyeHello"));
+		 */
+		
+		
+	}
+
+}

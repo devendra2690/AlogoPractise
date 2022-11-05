@@ -1,0 +1,90 @@
+package net.restfulapi.app.constant;
+
+import java.util.HashMap;
+
+public enum Workbasket {
+
+	 /*
+	    * the enum values are not in uppercase because Filenet is case sensitive - to be further investigated
+	    * */
+	    GUARANTEE_INCOME_CLAIMS("GuaranteeIncome_Claims", 3L),
+	    CLAIMS_FORM_CORPORATE("Claims_Form_Corporate", 6L),
+	    CLAIMS_OFFICER("Claims_Officer", 8L),
+	    CLAIMS_FORM_INDIVIDUAL("Claims_Form_Individual", 9L),
+	    GUARANTEE_INCOME_CONTRACTS("GuaranteeIncome_Contracts", 12L),
+	    CLAIMS_DATA_ENTRY("Claims_DataEntry", 10024L),
+	    CLAIMS_OFFICER_SPECIALS("Claims_Officer_Specials", 10026L),
+	    CLAIMS_OFFICER_AMB_CORPORATE("Claims_Officer_Amb_Corporate", 10027L),
+	    CLAIMS_ARIR("Claims_Arir", 10028L),
+	    CLAIMS_ARIR_COMPLAINT_FR("Claims_Arir_Complaint_FR", 10029L),
+	    CLAIMS_ARIR_COMPLAINT_NL("Claims_Arir_Complaint_NL", 10030L),
+	    CLAIMS_DATA_ENTRY_IND("Claims_DataEntry_Ind", 10031L),
+	    CLAIMS_MANAGER("Claims_Manager", 10032L),
+	    CLAIMS_OFFICER_AMB_IND("Claims_Officer_Amb_Ind", 10033L),
+	    CLAIMS_OFFICER_DENTAL_IND("Claims_Officer_Dental_Ind", 10034L),
+	    CLAIMS_OFFICER_EXPATS_CORPORATE("Claims_Officer_Expats_Corporate", 10035L),
+	    CLAIMS_OFFICER_EXPATS_IND("Claims_Officer_Expats_Ind", 10036L),
+	    CLAIMS_OFFICER_ING_IND("Claims_Officer_Ing_Ind", 10037L),
+	    CLAIMS_OFFICER_NVS_IND("Claims_Officer_Nvs_Ind", 10038L),
+	    CLAIMS_OFFICER_STAT_IND("Claims_Officer_Stat_Ind", 10039L),
+	    CLAIMS_OFFICER_VIP("Claims_Officer_VIP", 10040L),
+	    CLAIMS_TEAMLEADER("Claims_Teamleader", 10041L),
+	    CLAIMS_OFFICER_DELTA_LLOYD("Claims_Officer_Delta_Lloyd", 20025L),
+	    CLAIMS_E_BILLING_CORP("Claims_E_Billing_Corp", 40025L),
+	    CLAIMS_E_BILLING_IND("Claims_E_Billing_Ind", 40026L),
+	    CLAIMS_VERIFICATION("Claims_Verification", 40027L),
+	    POL_ADM_CORP_DATABASE("PolAdm_Corp_Database", 40028L),
+	    POL_ADM_INDIVIDUAL_SUPPORT("PolAdm_Individual_Support", 40034L),
+	    POL_ADM_INDIVIDUAL_NL("PolAdm_Individual_NL", 40035L),
+	    POL_ADM_INDIVIDUAL_FR("PolAdm_Individual_FR", 40036L),
+	    POL_ADM_INDIVIDUAL_VIP("PolAdm_Individual_VIP", 40037L),
+	    CLAIMS_DATA_ENTRY_TRAINING("Claims_DataEntry_Training", 40044L),
+	    CLAIMS_TREATMENT_TRAINING("Claims_Treatment_Training", 40045L),
+	    POL_ADM_CORP_INVOICES("PolAdm_Corp_Invoices", 50040L),
+	    POL_ADM_CORP_SALES("PolAdm_Corp_Sales", 50041L),
+	    POL_ADM_CORP_RENEWAL("PolAdm_Corp_Renewal", 50042L),
+	    POL_ADM_CORP_VIP("PolAdm_Corp_VIP", 50043L);
+
+	    private String name;
+	    private Long id;
+
+	    private static final Map<Long, Workbasket> idLookup = new HashMap()<>();
+	    static {
+	        for (Workbasket wb : Workbasket.values()) {
+	            idLookup.put(wb.getId(), wb);
+	        }
+	    }
+	    private static final Map<String, Workbasket> nameLookup = new HashMap<>();
+	    static {
+	        for (Workbasket wb : Workbasket.values()) {
+	            nameLookup.put(wb.getName(), wb);
+	        }
+	    }
+
+	    private Workbasket(String workbasketName, Long workbasketId) {
+	        name = workbasketName;
+	        id = workbasketId;
+	    }
+
+	    public String getName() {
+	        return name;
+	    }
+
+	    public Long getId() {
+	        return id;
+	    }
+
+	    @Override
+	    public String toString() {
+	        return getName();
+	    }
+
+	    public static Workbasket get(Long aId) {
+	        return idLookup.get(aId);
+	    }
+
+	    public static Workbasket get(String aName) {
+	        return nameLookup.get(aName);
+	    }
+
+}

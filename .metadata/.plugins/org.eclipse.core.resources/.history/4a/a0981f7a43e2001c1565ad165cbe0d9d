@@ -1,0 +1,43 @@
+package io.reflectoring;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+//@SpringBootApplication
+public class OpenAPIConsumerApp {
+
+	/*
+	 * public static void main(String[] args) {
+	 * SpringApplication.run(OpenAPIConsumerApp.class, args); }
+	 */
+	
+	public static void main(String[] args) {
+		
+		System.out.println(intToString(6, 10));
+	}
+	
+	private static String intToString(int num, int digits) {
+		StringBuilder output = new StringBuilder(Integer.toString(num));
+
+		while (output.length() < digits) {
+			output.append("0");
+		}
+
+		return output.toString();
+	}
+	
+	private static String oldIntToString(int num, int digits) {
+		String output = Integer.toString(num);
+
+		while (output.length() < digits) {
+			output = "0" + output;
+		}
+
+		return output;
+	}
+ }

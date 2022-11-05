@@ -1,0 +1,316 @@
+package net.restfulapi.app.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlType;
+
+/*import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;*/
+
+public class WorkflowDTO {
+
+	private static final long serialVersionUID = -4608770815688842598L;
+
+    private String workflowId;
+    private String workflowName;
+    private String policyNumber;
+    private Integer principalNumber;
+    private Date creationDate;
+    private Date modificationDate;
+    private String status;
+    private String assignedUser;
+    private String docId;
+    private String documentTitle;
+    private String attachment;
+    private String comment;
+    private String currentWorkbasket;
+    private String workbasketHealthDataEntry;
+    private String destinationWorkbasketTreatment;
+    private String destinationWorkbasket;
+    private String normalWorkbasketHealthTreatment;
+    private String normalWorkbasketDisabilityTreatment;
+    private Boolean hasSuspendInfo;
+    private Boolean isPureDisability;
+    private Boolean hasDisabilityIncluded;
+    private String fileType;
+    private String subType;
+    private String inType;
+    private String provenanceWorkbasket;
+    private List<VarParDTO> varPars;
+    private Integer subNumber;
+    private String version;
+    private String infoPolicy;
+    private String infoUnderwriting;
+
+    public String getWorkflowId() {
+        return workflowId;
+    }
+
+    public void setWorkflowId(final String aWorkflowId) {
+        this.workflowId = aWorkflowId;
+    }
+
+    public String getWorkflowName() {
+        return workflowName;
+    }
+
+    public void setWorkflowName(String aWorkflowName) {
+        this.workflowName = aWorkflowName;
+    }
+
+    public String getPolicyNumber() {
+        return policyNumber;
+    }
+
+    public void setPolicyNumber(final String aPolicyNumber) {
+        this.policyNumber = aPolicyNumber;
+    }
+
+    public Integer getPrincipalNumber() {
+        return principalNumber;
+    }
+
+    public void setPrincipalNumber(final Integer aPrincipalNumber) {
+        this.principalNumber = aPrincipalNumber;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(final Date aCreationDate) {
+        this.creationDate = aCreationDate;
+    }
+
+    public Date getModificationDate() {
+        return modificationDate;
+    }
+
+    public void setModificationDate(final Date aModificationDate) {
+        this.modificationDate = aModificationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(final String aStatus) {
+        this.status = aStatus;
+    }
+
+    public String getAssignedUser() {
+        return assignedUser;
+    }
+
+    public void setAssignedUser(final String aAssignedUser) {
+        this.assignedUser = aAssignedUser;
+    }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String aDocId) {
+        this.docId = aDocId;
+    }
+
+    public String getDocumentTitle() {
+        return documentTitle;
+    }
+
+    public void setDocumentTitle(String aDocumentTitle) {
+        this.documentTitle = aDocumentTitle;
+    }
+
+    public String getAttachment() {
+        return this.attachment;
+    }
+
+    public void setAttachment(String aAttachment) {
+        this.attachment = aAttachment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String aComment) {
+        this.comment = aComment;
+    }
+
+    public String getWorkbasketHealthDataEntry() {
+        return workbasketHealthDataEntry;
+    }
+
+    public void setWorkbasketHealthDataEntry(String aWorkbasketHealthDataEntry) {
+        this.workbasketHealthDataEntry = aWorkbasketHealthDataEntry;
+    }
+
+    public String getDestinationWorkbasketTreatment() {
+        return destinationWorkbasketTreatment;
+    }
+
+    public void setDestinationWorkbasketTreatment(String aDestinationWorkbasketTreatment) {
+        this.destinationWorkbasketTreatment = aDestinationWorkbasketTreatment;
+    }
+
+    public String getNormalWorkbasketHealthTreatment() {
+        return normalWorkbasketHealthTreatment;
+    }
+
+    public void setNormalWorkbasketHealthTreatment(String aNormalWorkbasketHealthTreatment) {
+        this.normalWorkbasketHealthTreatment = aNormalWorkbasketHealthTreatment;
+    }
+
+    public String getNormalWorkbasketDisabilityTreatment() {
+        return normalWorkbasketDisabilityTreatment;
+    }
+
+    public void setNormalWorkbasketDisabilityTreatment(String aNormalWorkbasketDisabilityTreatment) {
+        this.normalWorkbasketDisabilityTreatment = aNormalWorkbasketDisabilityTreatment;
+    }
+
+    public Boolean getHasSuspendInfo() {
+        return hasSuspendInfo;
+    }
+
+    public void setHasSuspendInfo(Boolean aHasSuspendInfo) {
+        this.hasSuspendInfo = aHasSuspendInfo;
+    }
+
+    public Boolean getIsPureDisability() {
+        return isPureDisability;
+    }
+
+    public void setIsPureDisability(Boolean aIsPureDisability) {
+        this.isPureDisability = aIsPureDisability;
+    }
+
+    public Boolean getHasDisabilityIncluded() {
+        return hasDisabilityIncluded;
+    }
+
+    public void setHasDisabilityIncluded(Boolean aHasDisabilityIncluded) {
+        this.hasDisabilityIncluded = aHasDisabilityIncluded;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String aFileType) {
+        this.fileType = aFileType;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String aSubType) {
+        this.subType = aSubType;
+    }
+
+    public String getCurrentWorkbasket() {
+        return currentWorkbasket;
+    }
+
+    public void setCurrentWorkbasket(String currentWorkbasket) {
+        this.currentWorkbasket = currentWorkbasket;
+    }
+
+    public String getDestinationWorkbasket() {
+        return destinationWorkbasket;
+    }
+
+    public void setDestinationWorkbasket(String destinationWorkbasket) {
+        this.destinationWorkbasket = destinationWorkbasket;
+    }
+
+    public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String versionNumber) {
+		this.version = versionNumber;
+	}
+
+    public String getInfoPolicy() {
+        return infoPolicy;
+    }
+
+    public void setInfoPolicy(String infoPolicy) {
+        this.infoPolicy = infoPolicy;
+    }
+
+    public String getInfoUnderwriting() {
+        return infoUnderwriting;
+    }
+
+    public void setInfoUnderwriting(String infoUnderwriting) {
+        this.infoUnderwriting = infoUnderwriting;
+    }
+
+	/*
+	 * @Override public int hashCode() { return new
+	 * HashCodeBuilder().append(this.assignedUser).append(this.creationDate).append(
+	 * this.modificationDate)
+	 * .append(this.policyNumber).append(this.principalNumber).append(this.subNumber
+	 * ).append(this.workflowId)
+	 * .append(this.assignedUser).append(this.docId).append(this.documentTitle).
+	 * toHashCode(); }
+	 */
+
+	/*
+	 * @Override public boolean equals(final Object aObject) { boolean result =
+	 * true; if (aObject == null || this.getClass() != aObject.getClass()) { result
+	 * = false; } else if (this != aObject) { WorkflowDTO workflow = (WorkflowDTO)
+	 * aObject; result = new EqualsBuilder().append(this.workflowId,
+	 * workflow.workflowId) .append(this.policyNumber, workflow.policyNumber)
+	 * .append(this.principalNumber, workflow.principalNumber)
+	 * .append(this.subNumber, workflow.subNumber) .append(this.creationDate,
+	 * workflow.creationDate) .append(this.modificationDate,
+	 * workflow.modificationDate) .append(this.status,
+	 * workflow.status).append(this.assignedUser, workflow.assignedUser) //
+	 * .append(this.docId, workflow.docId) // .append(this.documentTitle, //
+	 * workflow.documentTitle) .isEquals(); } return result; }
+	 * 
+	 * @Override public String toString() { return
+	 * ToStringBuilder.reflectionToString(this); }
+	 */
+
+    public String getInType() {
+        return inType;
+    }
+
+    public void setInType(String aInType) {
+        this.inType = aInType;
+    }
+
+    public String getProvenanceWorkbasket() {
+        return provenanceWorkbasket;
+    }
+
+    public void setProvenanceWorkbasket(String aProvenanceWorkbasket) {
+        this.provenanceWorkbasket = aProvenanceWorkbasket;
+    }
+
+	public Integer getSubNumber() {
+		return subNumber;
+	}
+
+	public void setSubNumber(Integer subNumber) {
+		this.subNumber = subNumber;
+	}
+
+	/*
+	 * public List<VarParDTO> getVarPars() { return varPars; }
+	 * 
+	 * public void setVarPars(List<VarParDTO> varPars) { this.varPars = varPars; }
+	 */
+
+
+
+}

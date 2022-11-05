@@ -1,0 +1,48 @@
+package io.reflectoring;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+//@SpringBootApplication
+public class OpenAPIConsumerApp {
+
+	/*
+	 * public static void main(String[] args) {
+	 * SpringApplication.run(OpenAPIConsumerApp.class, args); }
+	 */
+	
+	public static void main(String[] args) {
+		ErrorsProcessingPDF errorsProcessingPDF = new ErrorsProcessingPDF();
+		errorsProcessingPDF.setIncomplete(true);
+		errorsProcessingPDF.setInvalidSubType(true);
+		errorsProcessingPDF.setMultipleInvoices(true);
+		errorsProcessingPDF.setUnreadable(true);
+
+		System.out.print(extractErrors(errorsProcessingPDF));
+	}
+	
+	private static String extractErrors(ErrorsProcessingPDF errorsProcessingPDF) {
+		List<BatchFileError> errors = new ArrayList()<BatchFileError>();
+		if (BooleanUtils.isTrue(errorsProcessingPDF.getUnreadable())) {
+			errors.add(BatchFileError.UNREADABLE);
+		}
+		if (BooleanUtils.isTrue(errorsProcessingPDF.getIncomplete())) {
+			errors.add(BatchFileError.INCOMPLETE);
+		}
+		if (BooleanUtils.isTrue(errorsProcessingPDF.getMultipleInvoices())) {
+			errors.add(BatchFileError.MULTIPLE_INVOICES);
+		}
+		if (BooleanUtils.isTrue(errorsProcessingPDF.getInvalidSubType())) {
+			errors.add(BatchFileError.INVALID_SUBTYPE);
+		}
+		if (errors.isEmpty()) {
+			return null;
+		}
+		return StringUtils.join(errors, ", ");
+	}
+ }

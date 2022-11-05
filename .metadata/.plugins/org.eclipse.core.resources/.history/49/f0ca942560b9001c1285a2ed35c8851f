@@ -1,0 +1,176 @@
+package datastructures;
+
+public class CircularLinkedList_Devendra {
+
+	public class Node {
+
+		public Node previous;
+		public int data;
+		public Node next;
+
+		public Node(int data) {
+			this.data = data;
+		}
+	}
+
+	public Node head;
+
+	public void addFront(int data) {
+
+		Node currentNode = new Node(data);
+
+		if (head == null) {
+
+			head = currentNode;
+			head.next = head;
+			head.previous = head;
+			return;
+		} else {
+
+			// make currentNode as first and make currentNode as last node next
+			currentNode.next = head;
+			currentNode.previous = head.previous;
+			currentNode.previous.next = currentNode;
+			head.previous = currentNode;
+			head = currentNode;
+		}
+	}
+
+	public int getFirst() {
+		return head.data;
+	}
+
+	public int getLast() {
+
+		if (head != null && head.previous == null) {
+			return head.data;
+		}
+
+		return head.previous.data;
+	}
+
+	public int getNext(int data) {
+
+		if (head == null) {
+			// throw exception
+			return -1;
+		}
+
+		if (head.next == null) {
+			return head.data;
+		}
+
+		Node currentNode = head;
+		while (currentNode.next != head) {
+			if (currentNode.data == data) {
+				return currentNode.next.data;
+			}
+			currentNode = currentNode.next;
+		}
+
+		return -1;
+	}
+
+	public int getPrevious(int data) {
+
+		if (head == null) {
+			// throw exception
+			return -1;
+		}
+
+		if (head.next == null) {
+			return head.data;
+		}
+
+		Node currentNode = head;
+		while (currentNode.next != head) {
+			if (currentNode.data == data) {
+				return currentNode.previous.data;
+			}
+			currentNode = currentNode.next;
+		}
+
+		return -1;
+	}
+
+	public void addBack(int data) {
+
+		Node currentNewNode = new Node(data);
+
+		if (head == null) {
+			head = currentNewNode;
+			head.next = head;
+			head.previous = head;
+			return;
+		}
+
+		currentNewNode.previous = head.previous;
+		head.previous.next = currentNewNode;
+		currentNewNode.next = head;
+		head.previous = currentNewNode;
+	}
+
+	public int size() {
+
+		if (head == null) {
+			return -1;
+		}
+
+		if (head.next == null) {
+			return 1;
+		}
+
+		Node currentNode = head;
+		int size = 1;
+		while (currentNode.next != head) {
+			currentNode = currentNode.next;
+			size++;
+		}
+
+		return size;
+	}
+
+	public void clear() {
+		head = null;
+	}
+
+	public void deleteValue(int data) {
+
+		if (head == null) {
+			return;
+		}
+
+		if (head.next != null && head.data == data) {
+			head = null;
+		}
+
+		Node currentNode = head;
+		while (currentNode.next != head) {
+			if (currentNode.data == data) {
+				currentNode.previous.next = currentNode.next;
+				currentNode.next.previous = currentNode.previous;
+				return;
+			}
+			currentNode = currentNode.next;
+		}
+	}
+
+	public void print() {
+
+		if (head == null) {
+			return;
+		}
+		if (head.next == null) {
+			System.out.println(head.data);
+		}
+
+		Node currentNode = head;
+		while (currentNode.next != head) {
+			System.out.println(currentNode.data);
+			currentNode = currentNode.next;
+		}
+
+		System.out.println("");
+	}
+
+}

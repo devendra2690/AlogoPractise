@@ -1,0 +1,115 @@
+package net.restfulapi.app.dto;
+
+import java.io.Serializable;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
+public class VarParDTO {
+
+	private static final long serialVersionUID = -8504691916112683835L;
+
+    public static final String INCIDENTNUMBER = "incidentNumber";
+    public static final String INFO_UNDERWRITING = "infoUnderwriting";
+    public static final String HOSPITALCODE = "hospitalCode";
+    public static final String[] TYPES = {INCIDENTNUMBER,INFO_UNDERWRITING,HOSPITALCODE};
+
+    /**
+     * The index number. Used to ensure the sequence of the varpars. If no
+     * specific order is needed, leave this field 0.
+     */
+    int indexNumber;
+
+    /** The name of the Varpar field. */
+    String name;
+
+    /** The value of the Varpar. */
+    String value;
+    /**
+     * Instantiates a new var par dto.
+     *
+     **/
+    public VarParDTO() {
+	}
+
+	/**
+     * Instantiates a new var par dto.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param indexNumber
+     *            the index number, used to ensure the sequence of the varpars.
+     *            If no specific order is needed, leave this field 0.
+     */
+    public VarParDTO(String name, String value, int indexNumber) {
+        super();
+        this.indexNumber = indexNumber;
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * Instantiates a new var par dto.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * note: the indexnumber will be initiated as 0, this means that no specific
+     *      ordering is required.
+     */
+    public VarParDTO(String name, String value) {
+        super();
+        this.indexNumber = 0;
+        this.name = name;
+        this.value = value;
+    }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public int getIndexNumber() {
+		return indexNumber;
+	}
+
+	public void setIndexNumber(int indexNumber) {
+		this.indexNumber = indexNumber;
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this.name).append(this.value).append(this.indexNumber).toHashCode();
+    }
+
+    @Override
+    public boolean equals(final Object aObject) {
+        boolean result = true;
+        if (aObject == null || this.getClass() != aObject.getClass()) {
+            result = false;
+        } else if (this != aObject) {
+        	VarParDTO varPar = (VarParDTO) aObject;
+            result =
+                    new EqualsBuilder().append(this.name, varPar.name)
+                            .append(this.value, varPar.value)
+                            .append(this.indexNumber, varPar.indexNumber)
+                            .isEquals();
+        }
+        return result;
+    }
+
+}

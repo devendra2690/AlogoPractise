@@ -1,0 +1,27 @@
+package net.restfulapi.app.constant;
+
+import java.util.stream.Stream;
+
+public enum WorkflowEnum {
+
+	SUNDAY("off"), 
+    MONDAY("working"), 
+    TUESDAY("working"), 
+    WEDNESDAY("working"), 
+    THURSDAY("working"), 
+    FRIDAY("working"), 
+    SATURDAY("off");
+
+    private String typeOfDay;
+
+    WorkflowEnum(String typeOfDay) {
+        this.typeOfDay = typeOfDay;
+    }
+	
+    // standard getters and setters 
+
+    public static Stream<WorkflowEnum> stream() {
+        return Stream.of(WorkflowEnum.values()); 
+    }
+	
+}

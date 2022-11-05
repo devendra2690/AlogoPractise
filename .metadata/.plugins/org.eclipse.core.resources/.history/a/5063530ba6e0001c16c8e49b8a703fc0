@@ -1,0 +1,23 @@
+package io.reflectoring;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+//@SpringBootApplication
+public class OpenAPIConsumerApp {
+
+	/*
+	 * public static void main(String[] args) {
+	 * SpringApplication.run(OpenAPIConsumerApp.class, args); }
+	 */
+    
+	ErrorsProcessingPDF errorsProcessingPDF = new ErrorsProcessingPDF();
+	errorsProcessingPDF.setIncomplete(true);
+	errorsProcessingPDF.setInvalidSubType(true);
+	errorsProcessingPDF.setMultipleInvoices(true);
+	errorsProcessingPDF.setUnreadable(true);
+
+	BatchServiceBean batchServiceBean = new BatchServiceBean();
+	System.out.print(batchServiceBean.extractErrors(errorsProcessingPDF));
+
+}

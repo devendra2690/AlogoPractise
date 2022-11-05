@@ -1,0 +1,5 @@
+package net.restfulapi.app.constant;
+
+public enum WorkflowEnum {
+
+}

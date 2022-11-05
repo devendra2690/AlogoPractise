@@ -1,0 +1,94 @@
+package net.restfulapi.app.rest.service;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+
+import net.restfulapi.app.dao.ConfigurationDB;
+import net.restfulapi.app.rest.domain.Configuration;
+import net.restfulapi.app.rest.domain.Configurations;
+import net.restfulapi.app.rest.domain.common.Message;
+import net.restfulapi.app.rest.domain.common.Status;
+
+/**
+ * This REST resource has common path "/configurations" and 
+ * represents configurations collection resource as well as individual collection resources.
+ * 
+ * Default MIME type for this resource is "application/XML"
+ * */
+@Path("/extract")
+public class DownloadElxsResource 
+{
+	/**
+	 * Use uriInfo to get current context path and to build HATEOAS links 
+	 * */
+    @Context
+    UriInfo uriInfo;
+    
+    @Path("/extract/wrongrule")
+    @GET
+    @Produces("application/vnd.ms-excel")      
+    public Response  extractWrongRuleWorkflow() {
+
+		/*
+		 * try {
+		 * 
+		 * FileInputStream file = new FileInputStream(new File("C:\\test.xls"));
+		 * 
+		 * //Get the workbook instance for XLS file HSSFWorkbook workbook = new
+		 * HSSFWorkbook(file);
+		 * 
+		 * //Get first sheet from the workbook HSSFSheet sheet = workbook.getSheetAt(0);
+		 * 
+		 * //Iterate through each rows from first sheet Iterator< Row > rowIterator =
+		 * sheet.iterator(); while (rowIterator.hasNext()) { Row row =
+		 * rowIterator.next();
+		 * 
+		 * //For each row, iterate through each columns Iterator < Cell > cellIterator =
+		 * row.cellIterator(); while (cellIterator.hasNext()) {
+		 * 
+		 * Cell cell = cellIterator.next();
+		 * 
+		 * switch (cell.getCellType()) { case Cell.CELL_TYPE_BOOLEAN:
+		 * System.out.print(cell.getBooleanCellValue() + "\t\t"); break; case
+		 * Cell.CELL_TYPE_NUMERIC: System.out.print(cell.getNumericCellValue() +
+		 * "\t\t"); break; case Cell.CELL_TYPE_STRING:
+		 * System.out.print(cell.getStringCellValue() + "\t\t"); break; } }
+		 * System.out.println(""); } file.close(); FileOutputStream out = new
+		 * FileOutputStream(new File("C:\\test.xls")); workbook.write(out); out.close();
+		 * 
+		 * } catch (FileNotFoundException e) { e.printStackTrace(); } catch (IOException
+		 * e) { e.printStackTrace(); }
+		 */
+    	
+    	File file = new File("C:\\Users\\devendrap\\Desktop\\2022-08-24- WrongRules.xlsx");
+    	ResponseBuilder response = Response.ok((Object) file);  
+        response.header("Content-Disposition","attachment; filename=\"javatpoint_file.xlsx\"");  
+        return response.build();  
+    }    
+  
+}

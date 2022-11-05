@@ -1,0 +1,65 @@
+package net.restfulapi.app.rest.service;
+
+import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
+
+import net.restfulapi.app.dao.ConfigurationDB;
+import net.restfulapi.app.rest.domain.Configuration;
+import net.restfulapi.app.rest.domain.Configurations;
+import net.restfulapi.app.rest.domain.common.Message;
+import net.restfulapi.app.rest.domain.common.Status;
+
+/**
+ * This REST resource has common path "/configurations" and 
+ * represents configurations collection resource as well as individual collection resources.
+ * 
+ * Default MIME type for this resource is "application/XML"
+ * */
+@Path("/extract")
+@Produces("application/xml")
+public class DownloadElxsResource 
+{
+	/**
+	 * Use uriInfo to get current context path and to build HATEOAS links 
+	 * */
+    @Context
+    UriInfo uriInfo;
+    
+    /**
+     * Get configurations collection resource mapped at path "HTTP GET /configurations"
+     * */
+    @GET
+    public Configurations getConfigurations() {
+         
+        List<Configuration> list = ConfigurationDB.getAllConfigurations();
+         
+        Configurations configurations = new Configurations();
+        configurations.setConfigurations(list);
+        configurations.setSize(list.size());
+         
+        //Set link for primary collection
+        Link link = Link.fromUri(uriInfo.getPath()).rel("uri").build();
+        configurations.setLink(link);
+         
+        //Set links in configuration items
+        for(Configuration c: list){
+            Link lnk = Link.fromUri(uriInfo.getPath() + "/" + c.getId()).rel("self").build();
+            c.setLink(lnk);
+        }
+        return configurations;
+    }     
+  
+}

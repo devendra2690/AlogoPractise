@@ -1,0 +1,280 @@
+package net.restfulapi.app.rest.service;
+
+import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Link;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
+
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import net.restfulapi.app.constant.WorkflowEnum;
+import net.restfulapi.app.dao.ConfigurationDB;
+import net.restfulapi.app.dto.WorkflowDTO;
+import net.restfulapi.app.rest.domain.Configuration;
+import net.restfulapi.app.rest.domain.Configurations;
+
+/**
+ * This REST resource has common path "/configurations" and 
+ * represents configurations collection resource as well as individual collection resources.
+ * 
+ * Default MIME type for this resource is "application/XML"
+ * */
+@Path("/configurations")
+public class ConfigurationResource 
+{
+	/**
+	 * Use uriInfo to get current context path and to build HATEOAS links 
+	 * */
+    @Context
+    UriInfo uriInfo;
+    
+    private static String[] WORKFLOW_COLUMNS = {"WORKFLOW_ID","WORKFLOW_NAME","POLICY_NUMBER","PRINCIPLE_NUMBER","CREATION_DATE",
+            "MODIFICATION_DATE","STATUS","ASSIGNED_DATE","DOC_ID","DOCUMENT_TITLE","ATTACHMENT","COMMENT","CURRENT_WORKBASKET",
+            "WORKBASKET_HEALTH_DATA_ENTRY","DESTINATION_WORKBASKET_TREATMENT","DESTINATION_WORKBASKET","NORMAL_WORKBASKET_HEALTH_TREATMENT",
+            "NORMAL_WORKBASKET_DISABILITY_TREATMENT","HAS_SUSPEND_INFO","IS_PURE_DISABILITY","HAS_DISABILITY_INCLUDED","FILE_TYPE",
+            "SUB_TYPE","IN_TYPE","PROVENANCE_WORKBASKET","VARPARS","SUBNUMBER","VERSION","INFO_POLICY","INFO_UNDERWRITING"};
+    
+    
+    /**
+     * Get configurations collection resource mapped at path "HTTP GET /configurations"
+     * */
+    @GET
+    @Produces("application/xml")
+    public Configurations getConfigurations() {
+         
+        List<Configuration> list = ConfigurationDB.getAllConfigurations();
+         
+        Configurations configurations = new Configurations();
+        configurations.setConfigurations(list);
+        configurations.setSize(list.size());
+         
+        //Set link for primary collection
+        Link link = Link.fromUri(uriInfo.getPath()).rel("uri").build();
+        configurations.setLink(link);
+         
+        //Set links in configuration items
+        for(Configuration c: list){
+            Link lnk = Link.fromUri(uriInfo.getPath() + "/" + c.getId()).rel("self").build();
+            c.setLink(lnk);
+        }
+        return configurations;
+    }
+    
+    @GET
+    @Path("/download")
+    @Produces("application/vnd.ms-excel")      
+    public Response  extractWrongRuleWorkflow() {
+
+    	List<WorkflowDTO> workflowDTOs = new ArrayList<WorkflowDTO>();
+    	int i=0;
+    	while (i < 5) {
+			WorkflowDTO workflowDTO = getData();
+			workflowDTOs.add(workflowDTO);
+    		i++;
+		}
+    	
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String fileName = dateFormat.format(new Date())+"-WrongRules.xlsx";
+        
+    	File file = new File("C://Users//devendrap//Desktop//WrongRule//"+fileName);
+    	if(!file.exists()) {
+    		try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    	
+    	XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("WrongRule");
+
+        int rowNum = 0;
+        int colNum = 0;
+
+        XSSFRow row = sheet.createRow(rowNum++);        
+        Font headerFont = workbook.createFont();
+        headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        
+        List<WorkflowEnum> columnHeaders = WorkflowEnum.stream().collect(Collectors. toList());        
+        for(WorkflowEnum columnName : columnHeaders) {
+
+            XSSFCell cell = row.createCell(colNum++);
+            XSSFCellStyle cellStyle = changeCellBackgroundColorWithPattern(cell,Color.GREEN);
+            cellStyle.setFont(headerFont);            
+            cell.setCellStyle(cellStyle);
+            cell.setCellValue((String) columnName.name());
+
+        }
+        
+        LinkedHashMap<Integer, LinkedHashMap<String, String>> formattedWorkFlowDTODataMap = convertWorkflowDTOObject(workflowDTOs);
+        List<LinkedHashMap<String, String>> linkedHashMaps = new ArrayList<LinkedHashMap<String, String>>(formattedWorkFlowDTODataMap.values());
+        
+        for(LinkedHashMap<String, String> linkedHashMap : linkedHashMaps) {
+        	row = sheet.createRow(rowNum++);
+            colNum = 0;
+        	List<String> dataValues = new ArrayList<String>(linkedHashMap.values());
+        	for(String data : dataValues) {
+
+                XSSFCell cell = row.createCell(colNum++);
+        		int columnIndex = cell.getColumnIndex();
+                sheet.autoSizeColumn(columnIndex);
+                cell.setCellValue((String) data);
+                int currentColumnWidth = sheet.getColumnWidth(columnIndex);
+                sheet.setColumnWidth(columnIndex, (currentColumnWidth + 2500));
+                if(rowNum % 2 != 0) {
+                    changeCellBackgroundColorWithPattern(cell,Color.green);
+                }
+            }
+        }
+        
+        try {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    	ResponseBuilder response = Response.ok((Object) file);  
+        response.header("Content-Disposition","attachment; filename=\""+fileName+"\"");  
+        return response.build();  
+    }    
+  
+    public XSSFCellStyle changeCellBackgroundColorWithPattern(XSSFCell cell, Color color) {
+    	XSSFCellStyle cellStyle = (XSSFCellStyle) cell.getSheet().getWorkbook().createCellStyle();
+        cellStyle.setFillBackgroundColor(new XSSFColor(color));
+        cellStyle.setFillForegroundColor(new XSSFColor(color));
+        cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        cell.setCellStyle(cellStyle);
+        
+        return cellStyle;
+    }
+ 
+    public WorkflowDTO getData() {
+    	
+    	WorkflowDTO workflowDTO = new WorkflowDTO();
+    	workflowDTO.setWorkflowId(UUID.randomUUID().toString());
+    	workflowDTO.setWorkflowName(UUID.randomUUID().toString());
+    	workflowDTO.setPolicyNumber(UUID.randomUUID().toString());
+    	workflowDTO.setPrincipalNumber(123456);
+    	workflowDTO.setCreationDate(new Date());
+    	workflowDTO.setModificationDate(new Date());
+    	workflowDTO.setStatus(UUID.randomUUID().toString());
+    	workflowDTO.setAssignedUser(UUID.randomUUID().toString());
+    	workflowDTO.setDocId(UUID.randomUUID().toString());
+    	workflowDTO.setDocumentTitle(UUID.randomUUID().toString());
+    	workflowDTO.setAttachment(UUID.randomUUID().toString());
+    	workflowDTO.setComment(UUID.randomUUID().toString());
+    	workflowDTO.setCurrentWorkbasket(UUID.randomUUID().toString());
+    	workflowDTO.setWorkbasketHealthDataEntry(UUID.randomUUID().toString());
+    	workflowDTO.setDestinationWorkbasketTreatment(UUID.randomUUID().toString());
+    	workflowDTO.setDestinationWorkbasket(UUID.randomUUID().toString());
+    	workflowDTO.setNormalWorkbasketHealthTreatment(UUID.randomUUID().toString());
+    	workflowDTO.setNormalWorkbasketDisabilityTreatment(UUID.randomUUID().toString());
+    	workflowDTO.setHasSuspendInfo(true);
+    	workflowDTO.setIsPureDisability(true);
+    	workflowDTO.setHasDisabilityIncluded(true);
+    	workflowDTO.setFileType(UUID.randomUUID().toString());
+
+    	workflowDTO.setSubType(UUID.randomUUID().toString());
+    	workflowDTO.setSubNumber(4567);
+    	workflowDTO.setVersion(UUID.randomUUID().toString());
+    	workflowDTO.setInfoPolicy(UUID.randomUUID().toString());
+    	workflowDTO.setInfoUnderwriting(UUID.randomUUID().toString());
+
+    	workflowDTO.setInType(UUID.randomUUID().toString());
+
+    	workflowDTO.setProvenanceWorkbasket(UUID.randomUUID().toString());
+
+    	
+    	return workflowDTO;
+    }
+    
+    public LinkedHashMap<Integer, LinkedHashMap<String, String>> convertWorkflowDTOObject(List<WorkflowDTO> workflowDTOs) {
+    	
+    	LinkedHashMap<Integer, LinkedHashMap<String, String>>  formattedWorkFlowDTODataMap = new LinkedHashMap<Integer, LinkedHashMap<String, String>>();
+    	
+    	int index = 0;
+    	for(WorkflowDTO workflowDTO : workflowDTOs) {
+
+    		LinkedHashMap<String, String> workFlowDTOValueMap = new LinkedHashMap<String, String>();
+    		
+	        workFlowDTOValueMap.put(WorkflowEnum.WORKFLOW_ID.name(), workflowDTO.getWorkflowId());
+	        workFlowDTOValueMap.put(WorkflowEnum.WORKFLOW_NAME.name(), workflowDTO.getWorkflowName());
+	        workFlowDTOValueMap.put(WorkflowEnum.POLICY_NUMBER.name(), workflowDTO.getPolicyNumber());
+	        workFlowDTOValueMap.put(WorkflowEnum.PRINCIPLE_NUMBER.name(), workflowDTO.getPrincipalNumber() != null ? String.valueOf(workflowDTO.getPrincipalNumber()) : "");
+	        workFlowDTOValueMap.put(WorkflowEnum.FILE_TYPE.name(), workflowDTO.getFileType());
+	        workFlowDTOValueMap.put(WorkflowEnum.SUB_TYPE.name(), workflowDTO.getSubType());
+	        workFlowDTOValueMap.put(WorkflowEnum.IN_TYPE.name(), workflowDTO.getInType());
+	        workFlowDTOValueMap.put(WorkflowEnum.PROVENANCE_WORKBASKET.name(), workflowDTO.getProvenanceWorkbasket());
+	        workFlowDTOValueMap.put(WorkflowEnum.VARPARS.name(), workflowDTO.getVarPars() != null && workflowDTO.getVarPars().size()>0 ? workflowDTO.getVarPars().toString() : "");
+	        workFlowDTOValueMap.put(WorkflowEnum.SUBNUMBER.name(), workflowDTO.getSubNumber() != null ? String.valueOf(workflowDTO.getSubNumber()) : "");
+	        workFlowDTOValueMap.put(WorkflowEnum.VERSION.name(), workflowDTO.getVersion());
+	        workFlowDTOValueMap.put(WorkflowEnum.CREATION_DATE.name(), workflowDTO.getCreationDate().toString());
+	        workFlowDTOValueMap.put(WorkflowEnum.STATUS.name(), workflowDTO.getStatus());
+	        workFlowDTOValueMap.put(WorkflowEnum.MODIFICATION_DATE.name(), workflowDTO.getModificationDate().toGMTString());
+	        workFlowDTOValueMap.put(WorkflowEnum.DOC_ID.name(), workflowDTO.getDocId());
+	        workFlowDTOValueMap.put(WorkflowEnum.DOCUMENT_TITLE.name(), workflowDTO.getDocumentTitle());
+	        workFlowDTOValueMap.put(WorkflowEnum.ATTACHMENT.name(), workflowDTO.getAttachment());
+	        workFlowDTOValueMap.put(WorkflowEnum.COMMENT.name(), workflowDTO.getComment());
+	        workFlowDTOValueMap.put(WorkflowEnum.CURRENT_WORKBASKET.name(), workflowDTO.getCurrentWorkbasket());
+	        workFlowDTOValueMap.put(WorkflowEnum.WORKBASKET_HEALTH_DATA_ENTRY.name(), workflowDTO.getWorkbasketHealthDataEntry());
+	        workFlowDTOValueMap.put(WorkflowEnum.DESTINATION_WORKBASKET_TREATMENT.name(), workflowDTO.getDestinationWorkbasketTreatment());
+	        workFlowDTOValueMap.put(WorkflowEnum.DESTINATION_WORKBASKET.name(), workflowDTO.getDestinationWorkbasket());
+	        workFlowDTOValueMap.put(WorkflowEnum.NORMAL_WORKBASKET_HEALTH_TREATMENT.name(), workflowDTO.getNormalWorkbasketHealthTreatment());
+	        workFlowDTOValueMap.put(WorkflowEnum.NORMAL_WORKBASKET_DISABILITY_TREATMENT.name(), workflowDTO.getNormalWorkbasketDisabilityTreatment());
+	        workFlowDTOValueMap.put(WorkflowEnum.HAS_SUSPEND_INFO.name(), String.valueOf(workflowDTO.getHasSuspendInfo()));
+	        workFlowDTOValueMap.put(WorkflowEnum.IS_PURE_DISABILITY.name(), String.valueOf(workflowDTO.getIsPureDisability()));
+	        workFlowDTOValueMap.put(WorkflowEnum.HAS_DISABILITY_INCLUDED.name(), String.valueOf(workflowDTO.getHasDisabilityIncluded()));
+	        workFlowDTOValueMap.put(WorkflowEnum.INFO_POLICY.name(), workflowDTO.getInfoPolicy());
+	        workFlowDTOValueMap.put(WorkflowEnum.INFO_UNDERWRITING.name(), workflowDTO.getInfoUnderwriting());
+
+	        formattedWorkFlowDTODataMap.put(index, workFlowDTOValueMap);
+	        index++;
+    	}
+    	
+    	
+    	return formattedWorkFlowDTODataMap;
+    }
+        
+}

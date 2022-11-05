@@ -1,0 +1,5 @@
+package net.restfulapi.app.dto;
+
+public class WorkflowDTO {
+
+}
